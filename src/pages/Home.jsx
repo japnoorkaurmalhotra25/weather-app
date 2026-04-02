@@ -3,21 +3,27 @@ import SearchBar from '../components/SearchBar';
 import { getCurrentWeather, getForecast } from '../services/weatherService';
 
 const getEmoji = (main) => {
-  const map = { Clear: '☀️', Clouds: '☁️', Rain: '🌧️', Drizzle: '🌦️', Thunderstorm: '⛈️', Snow: '❄️', Mist: '🌫️', Haze: '🌫️' };
+  const map = {
+    Clear: '☀️', Clouds: '☁️', Rain: '🌧️',
+    Drizzle: '🌦️', Thunderstorm: '⛈️', Snow: '❄️',
+    Mist: '🌫️', Haze: '🌫️'
+  };
   return map[main] || '🌡️';
 };
 
-const Home = () => {
+const Home = ({ theme, toggleTheme }) => {
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedDay, setSelectedDay] = useState(null);
 
   const handleSearch = async (city) => {
     setLoading(true);
     setError('');
     setWeather(null);
     setForecast(null);
+    setSelectedDay(null);
     try {
       const [current, forecastData] = await Promise.all([
         getCurrentWeather(city),
@@ -32,7 +38,6 @@ const Home = () => {
     }
   };
 
-  // Get one entry per day for 7-day forecast
   const dailyForecast = forecast
     ? Object.values(
         forecast.list.reduce((acc, item) => {
@@ -43,8 +48,22 @@ const Home = () => {
       ).slice(0, 7)
     : [];
 
+  // Get all hourly slots for a specific day
+  const getDayHourly = (dateStr) => {
+    if (!forecast) return [];
+    return forecast.list.filter(item => item.dt_txt.startsWith(dateStr));
+  };
+
+  const handleDayClick = (dateStr) => {
+    setSelectedDay(prev => prev === dateStr ? null : dateStr);
+  };
+
   const now = weather
-    ? new Date().toLocaleString('en-US', { weekday: 'long', hour: '2-digit', minute: '2-digit' })
+    ? new Date().toLocaleString('en-US', {
+        weekday: 'long',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
     : '';
 
   return (
@@ -55,7 +74,12 @@ const Home = () => {
         <div className="top-bar">
           <div className="logo">🌤 WeatherCast</div>
           <SearchBar onSearch={handleSearch} loading={loading} />
-          <div className="top-icons">♡ ♥</div>
+          <div className="top-right">
+            <button className="theme-toggle" onClick={toggleTheme}>
+              {theme === 'night' ? '☀️ Day' : '🌙 Night'}
+            </button>
+           
+          </div>
         </div>
 
         {/* ERROR */}
@@ -106,8 +130,10 @@ const Home = () => {
                   {forecast.list.slice(0, 6).map((item, i) => (
                     <div key={i} className={`hour-box ${i === 0 ? 'active' : ''}`}>
                       <p>{i === 0 ? 'Now' : new Date(item.dt_txt).getHours() + ':00'}</p>
-                      <span>{getEmoji(item.weather[0].main)}</span>
-                      <p className="hour-temp">{Math.round(item.main.temp)}°</p>
+                      <span>{getEmoji(i === 0 ? weather.weather[0].main : item.weather[0].main)}</span>
+                      <p className="hour-temp">
+                        {i === 0 ? Math.round(weather.main.temp) : Math.round(item.main.temp)}°
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -119,16 +145,65 @@ const Home = () => {
               <div className="section">
                 <div className="section-title">7-Day Forecast &gt;</div>
                 <div className="weekly">
-                  {dailyForecast.map((item, i) => (
-                    <div key={i} className="day-row">
-                      <span className="day-emoji">{getEmoji(item.weather[0].main)}</span>
-                      <span className="day-name">
-                        {i === 0 ? 'Today' : new Date(item.dt_txt).toLocaleDateString('en-US', { weekday: 'long' })}
-                      </span>
-                      <div className="day-bar"><div className="day-bar-fill"></div></div>
-                      <span className="day-temps">{Math.round(item.main.temp_max)}° / {Math.round(item.main.temp_min)}°</span>
-                    </div>
-                  ))}
+                  {dailyForecast.map((item, i) => {
+                    const dateStr = item.dt_txt.split(' ')[0];
+                    const isSelected = selectedDay === dateStr;
+                    const hourlySlots = getDayHourly(dateStr);
+                    const fullDate = new Date(item.dt_txt).toLocaleDateString('en-US', {
+                      weekday: 'long', month: 'long', day: 'numeric'
+                    });
+
+                    return (
+                      <div key={i}>
+                        {/* DAY ROW — clickable */}
+                        <div
+                          className={`day-row ${isSelected ? 'day-row-active' : ''}`}
+                          onClick={() => handleDayClick(dateStr)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <span className="day-emoji">{getEmoji(item.weather[0].main)}</span>
+                          <span className="day-name">
+                            {i === 0 ? 'Today' : new Date(item.dt_txt).toLocaleDateString('en-US', { weekday: 'long' })}
+                          </span>
+                          <div className="day-bar"><div className="day-bar-fill"></div></div>
+                          <span className="day-temps">
+                            {Math.round(item.main.temp_max)}° / {Math.round(item.main.temp_min)}°
+                          </span>
+                          <span className="day-arrow">{isSelected ? '▲' : '▼'}</span>
+                        </div>
+
+                        {/* EXPANDED DAY DETAIL */}
+                        {isSelected && (
+                          <div className="day-expanded">
+                            <p className="day-expanded-title">📅 {fullDate}</p>
+
+                            {hourlySlots.length > 0 ? (
+                              <div className="day-expanded-grid">
+                                {hourlySlots.map((slot, j) => (
+                                  <div key={j} className="day-slot">
+                                    <p className="slot-time">
+                                      {new Date(slot.dt_txt).toLocaleTimeString('en-US', {
+                                        hour: '2-digit', minute: '2-digit'
+                                      })}
+                                    </p>
+                                    <span className="slot-emoji">{getEmoji(slot.weather[0].main)}</span>
+                                    <p className="slot-temp">{Math.round(slot.main.temp)}°</p>
+                                    <p className="slot-desc">{slot.weather[0].description}</p>
+                                    <div className="slot-stats">
+                                      <span>💧 {slot.main.humidity}%</span>
+                                      <span>🌬️ {slot.wind.speed} km/h</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="no-data">No detailed data available for this day.</p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

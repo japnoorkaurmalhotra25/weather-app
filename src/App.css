@@ -344,3 +344,279 @@ body {
   .top-icons { display: none; }
   .stats-card { flex-direction: column; align-items: flex-start; padding: 0.875rem 1rem; }
 }
+
+/* ===== THEME TOGGLE BUTTON ===== */
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 25px;
+  color: white;
+  padding: 0.4rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* ===== DAY MODE ===== */
+.theme-day .home {
+  background: url('https://images.unsplash.com/photo-1601297183305-6df142704ea2?w=1200')
+    center/cover no-repeat fixed;
+}
+
+.theme-day .home::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 200, 100, 0.3) 0%,
+    rgba(255, 240, 200, 0.5) 40%,
+    rgba(200, 230, 255, 0.6) 100%
+  );
+}
+
+.theme-day .overlay {
+  color: #1a1a2e;
+}
+
+/* Top bar */
+.theme-day .top-bar {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 0.5rem 1rem;
+}
+
+.theme-day .logo { color: #1a1a2e; }
+
+/* Search */
+.theme-day .search-wrapper {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.theme-day .search-input { color: #1a1a2e; }
+.theme-day .search-input::placeholder { color: rgba(0, 0, 0, 0.4); }
+.theme-day .search-icon { color: rgba(0, 0, 0, 0.5); }
+
+.theme-day .location-btn {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #1a1a2e;
+}
+
+.theme-day .location-btn:hover { background: rgba(255, 255, 255, 0.75); }
+
+/* Theme toggle in day mode */
+.theme-day .theme-toggle {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #1a1a2e;
+}
+
+.theme-day .theme-toggle:hover { background: rgba(255, 255, 255, 0.75); }
+
+/* Hero */
+.theme-day .temp { color: #1a1a2e; }
+.theme-day .city { color: #1a1a2e; }
+.theme-day .desc { color: #444; }
+
+/* Stats card */
+.theme-day .stats-card {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-day .stat-item { color: #1a1a2e; }
+.theme-day .stat-item span { color: #555; }
+
+/* Section title */
+.theme-day .section-title { color: #1a1a2e; }
+
+/* Hourly */
+.theme-day .hour-box {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1a1a2e;
+}
+
+.theme-day .hour-box.active {
+  background: rgba(255, 200, 80, 0.5);
+  border-color: rgba(255, 160, 0, 0.5);
+}
+
+/* Weekly */
+.theme-day .day-row {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1a1a2e;
+}
+
+.theme-day .day-name { color: #1a1a2e; }
+.theme-day .day-temps { color: #1a1a2e; }
+
+.theme-day .day-bar {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.theme-day .day-bar-fill {
+  background: linear-gradient(to right, #f9a825, #ff7043);
+}
+
+/* Top icons */
+.theme-day .top-icons { color: #1a1a2e; }
+
+/* Error */
+.theme-day .error-box {
+  background: rgba(239, 83, 80, 0.15);
+  color: #c62828;
+}
+
+/* Placeholder */
+.theme-day .placeholder { color: #444; }
+.theme-day .placeholder p { color: #1a1a2e; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .top-right { gap: 0.4rem; }
+  .theme-toggle { padding: 0.4rem 0.75rem; font-size: 0.75rem; }
+}
+
+/* ===== CLICKABLE DAY ROW ===== */
+.day-row {
+  transition: background 0.2s, transform 0.1s;
+}
+
+.day-row:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateX(4px);
+}
+
+.day-row-active {
+  background: rgba(79, 195, 247, 0.15) !important;
+  border-color: rgba(79, 195, 247, 0.35) !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.day-arrow {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  flex-shrink: 0;
+  margin-left: 0.25rem;
+}
+
+/* ===== EXPANDED DAY DETAIL ===== */
+.day-expanded {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(79, 195, 247, 0.2);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  padding: 1rem 1.25rem 1.25rem;
+  margin-bottom: 0.5rem;
+  animation: slideDown 0.25s ease;
+}
+
+.day-expanded-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-bottom: 1rem;
+  color: #4fc3f7;
+}
+
+.day-expanded-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.75rem;
+}
+
+.day-slot {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  transition: background 0.2s;
+}
+
+.day-slot:hover { background: rgba(255, 255, 255, 0.13); }
+
+.slot-time {
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.slot-emoji { font-size: 1.5rem; }
+
+.slot-temp {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.slot-desc {
+  font-size: 0.7rem;
+  opacity: 0.65;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.slot-stats {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.no-data {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Day mode expanded */
+.theme-day .day-expanded {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.theme-day .day-expanded-title { color: #1a6fa8; }
+
+.theme-day .day-slot {
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #1a1a2e;
+}
+
+.theme-day .day-slot:hover { background: rgba(255, 255, 255, 0.65); }
+
+.theme-day .day-row-active {
+  background: rgba(255, 160, 0, 0.2) !important;
+  border-color: rgba(255, 160, 0, 0.4) !important;
+}
