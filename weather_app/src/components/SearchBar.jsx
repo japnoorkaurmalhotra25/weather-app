@@ -9,21 +9,21 @@ const SearchBar = ({ onSearch, loading }) => {
   };
 
   return (
-    <form className="search-form" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="search-form">
       <div className="search-wrapper">
         <span className="search-icon">🔍</span>
         <input
           type="text"
           className="search-input"
-          placeholder="Search city... (e.g. Delhi, Mumbai)"
+          placeholder="Search for a city..."
           value={city}
           onChange={(e) => setCity(e.target.value)}
           disabled={loading}
         />
-        <button type="submit" className="search-btn" disabled={loading || !city.trim()}>
-          {loading ? 'Searching...' : 'Search'}
-        </button>
       </div>
+      <button type="submit" className="location-btn" disabled={loading || !city.trim()}>
+        📍 {loading ? 'Searching...' : 'Search'}
+      </button>
     </form>
   );
 };
