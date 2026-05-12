@@ -1,0 +1,25 @@
+services:
+  # Backend API
+  - type: web
+    name: weathercast-api
+    env: node
+    rootDir: weather_app/weather_app/backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+
+  # Frontend (Vite static build)
+  - type: static
+    name: weathercast-frontend
+    rootDir: weather_app/weather_app/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      # Set this in Render to your backend URL, e.g. https://weathercast-api.onrender.com
+      - key: VITE_API_URL
+        sync: false

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE = 'https://stormy-pamu.onrender.com/api/weather';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const BASE = `${API_BASE_URL}/api/weather`;
 
 export const getCurrentWeather = async (city) => {
   const { data } = await axios.get(`${BASE}/current`, {
